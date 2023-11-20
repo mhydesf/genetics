@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Generic, List, Optional, Type, TypeVar, cast
+from typing import Generic, List, Optional, Type, TypeVar
 
 
 T = TypeVar("T")
@@ -9,7 +9,7 @@ T = TypeVar("T")
 class _BaseNode(ABC, Generic[T]):
     def __init__(
         self,
-        data: Optional[T],
+        data: T,
         parent: Optional[_BaseNode] = None,
     ) -> None:
         self.data = data
@@ -27,7 +27,7 @@ class _BaseNode(ABC, Generic[T]):
 
     @property
     @abstractmethod
-    def data(self) -> Optional[T]:
+    def data(self) -> T:
         raise NotImplementedError("Cannot call method of abstract class")
 
     @data.setter
@@ -52,7 +52,8 @@ class GeneralNode(_BaseNode[T]):
         data: T,
         parent: Optional[_BaseNode] = None,
     ) -> None:
-        self.check_type(parent, GeneralNode)
+        if parent:
+            self.check_type(parent, GeneralNode)
         super().__init__(data, parent)
         self._children: List[_BaseNode] = []
 
@@ -66,7 +67,7 @@ class GeneralNode(_BaseNode[T]):
         self._parent = parent
 
     @property
-    def data(self) -> Optional[T]:
+    def data(self) -> T:
         return self._data
 
     @data.setter
@@ -88,10 +89,11 @@ class BinaryNode(_BaseNode[T]):
         data: T,
         parent: Optional[_BaseNode] = None,
     ) -> None:
-        self.check_type(parent, BinaryNode)
+        if parent:
+            self.check_type(parent, BinaryNode)
         super().__init__(data, parent)
-        self._left_child: Optional[_BaseNode] = None
-        self._right_child: Optional[_BaseNode] = None
+        self._left_child: Optional[BinaryNode] = None
+        self._right_child: Optional[BinaryNode] = None
 
     @property
     def parent(self) -> Optional[_BaseNode]:
@@ -103,7 +105,7 @@ class BinaryNode(_BaseNode[T]):
         self._parent = parent
 
     @property
-    def data(self) -> Optional[T]:
+    def data(self) -> T:
         return self._data
 
     @data.setter
@@ -111,19 +113,19 @@ class BinaryNode(_BaseNode[T]):
         self._data = data
 
     @property
-    def left_child(self) -> _BaseNode:
-        return cast(_BaseNode, self._left_child)
+    def left_child(self) -> Optional[BinaryNode]:
+        return self._left_child
 
     @left_child.setter
-    def left_child(self, child: _BaseNode) -> None:
+    def left_child(self, child: BinaryNode) -> None:
         self.check_type(child, BinaryNode)
         self._left_child = child
 
     @property
-    def right_child(self) -> _BaseNode:
-        return cast(_BaseNode, self._right_child)
+    def right_child(self) -> Optional[BinaryNode]:
+        return self._right_child
 
     @right_child.setter
-    def right_child(self, child: _BaseNode) -> None:
+    def right_child(self, child: BinaryNode) -> None:
         self.check_type(child, BinaryNode)
         self._right_child = child
