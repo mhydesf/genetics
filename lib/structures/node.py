@@ -37,10 +37,10 @@ class _BaseNode(ABC, Generic[T]):
 
     @staticmethod
     def check_type(
-        node: Optional[_BaseNode],
+        node: _BaseNode,
         node_type: Type[_BaseNode]
     ) -> None:
-        if node and not isinstance(node, GeneralNode):
+        if not isinstance(node, GeneralNode):
             raise TypeError(
                 f"Node is of type {type(node)} but should by of type {node_type}"
             )
