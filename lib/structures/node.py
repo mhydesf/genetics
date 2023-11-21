@@ -8,22 +8,25 @@ NodeT = TypeVar("NodeT", bound='_BaseNode')
 
 
 class SupportsComparators(Protocol):
-    def __eq__(self, _: object) -> bool:
+    def __eq__(self, other: object) -> bool:
         ...
 
-    def __ne__(self, _: object) -> bool:
+    def __ne__(self, other: object) -> bool:
         ...
 
-    def __lt__(self, _: Any) -> bool:
+    def __lt__(self, other: Any) -> bool:
         ...
 
-    def __le__(self, _: Any) -> bool:
+    def __le__(self, other: Any) -> bool:
         ...
 
-    def __gt__(self, _: Any) -> bool:
+    def __gt__(self, other: Any) -> bool:
         ...
 
-    def __ge__(self, _: Any) -> bool:
+    def __ge__(self, other: Any) -> bool:
+        ...
+
+    def __call__(self, *args, **kwargs) -> Any:
         ...
 
 
