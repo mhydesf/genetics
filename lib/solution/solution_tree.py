@@ -104,8 +104,14 @@ class SolutionTree(BinaryTree):
                 right_side = ""
             operator_symbol = SYMBOLS.get(node.data, '?')
 
+            sig = inspect.signature(node.data)
+            num_args = len(sig.parameters)
             if is_root:
-                return f"f = {left_side} {operator_symbol} {right_side}"
-            return f"({left_side} {operator_symbol} {right_side})"
+                if num_args > 1:
+                    return f"f = {left_side} {operator_symbol} {right_side}"
+                return f"f = {operator_symbol}({left_side})"
+            if num_args > 1:
+                return f"({left_side} {operator_symbol} {right_side})"
+            return f"({operator_symbol}({left_side})"
 
         return str(node.data)
