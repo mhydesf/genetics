@@ -1,13 +1,11 @@
 from __future__ import annotations
-import inspect
-from typing import Callable, Dict, List, Optional, cast
-from math import cos
-import operator
 import random
+import inspect
+import operator
+from math import cos
+from typing import Any, Callable, Dict, List, Optional, SupportsFloat, SupportsInt, cast
 
-from structures.node import T, BinaryNode
-from structures.tree import BinaryTree
-from solution.solution_node import SolutionNode
+from structures.solution_node import T, SolutionNode
 
 
 SYMBOLS = {
@@ -19,19 +17,27 @@ SYMBOLS = {
 }
 
 
-class SolutionTree(BinaryTree):
+class SolutionTree:
     def __init__(
         self,
         root: SolutionNode
     ) -> None:
         self._root = root
-        super().__init__(cast(BinaryNode, self._root))
 
     def __repr__(self) -> str:
         return self.print_equation(cast(SolutionNode, self.root), True)
 
-    def evaluate(self, context: Dict[str, T]) -> T:
-        return cast(SolutionNode, self.root).evaluate(context)
+    @property
+    def root(self) -> SolutionNode:
+        return self._root
+
+    @root.setter
+    def root(self, node: SolutionNode) -> None:
+        node.check_type(node)
+        self._root = node
+
+    def evaluate(self, context: Dict[str, T]) -> Callable[..., Any] | SupportsInt | SupportsFloat:
+        return self.root.evaluate(context)
 
     @staticmethod
     def generate_random_tree(

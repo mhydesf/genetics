@@ -1,6 +1,7 @@
 import operator
-from solution.solution_tree import SolutionTree
 from math import cos
+
+from structures.solution_tree import SolutionTree
 
 operators = [cos, operator.add, operator.sub, operator.mul, operator.truediv]
 operands = [1, 2, 'x', 'y']
