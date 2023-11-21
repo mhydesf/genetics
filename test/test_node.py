@@ -43,7 +43,7 @@ class TestGeneralNode(TestCase):
         left_node = GeneralNode(1)
         right_node = GeneralNode(2)
         self.assertLess(left_node, right_node)
-    
+
     def test_less_than_equal(self):
         left_node = GeneralNode(1)
         right_node = GeneralNode(2)
@@ -55,7 +55,7 @@ class TestGeneralNode(TestCase):
         left_node = GeneralNode(5)
         right_node = GeneralNode(2)
         self.assertGreater(left_node, right_node)
-    
+
     def test_greater_than_equal(self):
         left_node = GeneralNode(5)
         right_node = GeneralNode(2)
@@ -91,7 +91,7 @@ class TestBinaryNode(TestCase):
         parent.right_child = right_child
         self.assertEqual(parent.left_child, left_child)
         self.assertEqual(parent.right_child, right_child)
-    
+
     def test_set_parent(self):
         parent = BinaryNode(1)
         child = BinaryNode(2)
@@ -102,7 +102,7 @@ class TestBinaryNode(TestCase):
         node = BinaryNode(1)
         node.data = 3
         self.assertEqual(node.data, 3)
-    
+
     def test_equals(self):
         left_node = BinaryNode(1)
         right_node = BinaryNode(1)
@@ -117,7 +117,7 @@ class TestBinaryNode(TestCase):
         left_node = BinaryNode(1)
         right_node = BinaryNode(2)
         self.assertLess(left_node, right_node)
-    
+
     def test_less_than_equal(self):
         left_node = BinaryNode(1)
         right_node = BinaryNode(2)
@@ -129,7 +129,7 @@ class TestBinaryNode(TestCase):
         left_node = BinaryNode(5)
         right_node = BinaryNode(2)
         self.assertGreater(left_node, right_node)
-    
+
     def test_greater_than_equal(self):
         left_node = BinaryNode(5)
         right_node = BinaryNode(2)

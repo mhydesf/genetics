@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from structures.node import GeneralNode, BinaryNode
-from structures.tree import GeneralTree, BinaryTree
+from structures.tree import GeneralTree, BinaryTree, BtInsertionMethod
 
 
 class TestGeneralTree(TestCase):
@@ -34,7 +34,7 @@ class TestBinaryTree(TestCase):
         tree = BinaryTree(root)
         tree.root = new_root
         self.assertEqual(tree.root, new_root)
-    
+
     def test_add_wrong_type(self):
         root = GeneralNode(1)
         with self.assertRaises(TypeError):
@@ -45,8 +45,8 @@ class TestBinaryTree(TestCase):
         tree = BinaryTree(root)
         left_node = BinaryNode(5)
         right_node = BinaryNode(15)
-        tree._bst_insert(left_node, tree.root)
-        tree._bst_insert(right_node, tree.root)
+        tree.insert(left_node, BtInsertionMethod.BST_INSERT)
+        tree.insert(right_node, BtInsertionMethod.BST_INSERT)
         self.assertEqual(tree.root.left_child, left_node)
         self.assertEqual(tree.root.right_child, right_node)
 
@@ -56,9 +56,9 @@ class TestBinaryTree(TestCase):
         right_child = BinaryNode(3)
         new_node = BinaryNode(4)
         tree = BinaryTree(root)
-        tree._complete_bt_insert(left_child)
-        tree._complete_bt_insert(right_child)
-        tree._complete_bt_insert(new_node)
+        tree.insert(left_child, BtInsertionMethod.COMPLETE_INSERT)
+        tree.insert(right_child, BtInsertionMethod.COMPLETE_INSERT)
+        tree.insert(new_node, BtInsertionMethod.COMPLETE_INSERT)
         self.assertEqual(tree.root.left_child, left_child)
         self.assertEqual(tree.root.right_child, right_child)
         self.assertEqual(tree.root.left_child.left_child, new_node)
@@ -67,14 +67,14 @@ class TestBinaryTree(TestCase):
         root = BinaryNode(1)
         left_child = BinaryNode(2)
         tree = BinaryTree(root)
-        tree._left_insert(left_child)
+        tree.insert(left_child, BtInsertionMethod.LEFT_INSERT)
         self.assertEqual(tree.root.left_child, left_child)
 
     def test_right_insert(self):
         root = BinaryNode(1)
         right_child = BinaryNode(2)
         tree = BinaryTree(root)
-        tree._right_insert(right_child)
+        tree.insert(right_child, BtInsertionMethod.RIGHT_INSERT)
         self.assertEqual(tree.root.right_child, right_child)
 
 
