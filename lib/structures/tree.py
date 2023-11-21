@@ -102,6 +102,8 @@ class BinaryTree(_BaseTree):
                 self._left_insert(node)
             case BtInsertionMethod.RIGHT_INSERT:
                 self._right_insert(node)
+            case _:
+                raise ValueError(f"Insertion options do not include {insertion}")
 
     def _bst_insert(
         self,
