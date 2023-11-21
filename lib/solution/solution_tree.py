@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import cast
+from typing import Callable, List, cast
 
 from structures.node import T, BinaryNode
 from structures.tree import BinaryTree
@@ -16,7 +16,15 @@ class SolutionTree(BinaryTree):
 
     # TODO: Implement this
     @staticmethod
-    def generate_random_tree(max_depth: int, current_depth: int = 0) -> SolutionTree:
+    def generate_random_tree(
+        operators: List[Callable],
+        operands: List[T],
+        max_depth: int,
+        current_depth: int = 0) -> SolutionTree:
+        print(operators)
+        print(operands)
+        print(max_depth)
+        print(current_depth)
         return SolutionTree(SolutionNode(1))
 
     def evaluate(self) -> T:
