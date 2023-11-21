@@ -1,9 +1,29 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Generic, List, Optional, Type, TypeVar
+from typing import Any, Generic, List, Optional, Protocol, Type, TypeVar
 
 
-T = TypeVar("T")
+class SupportsComparators(Protocol):
+    def __eq__(self, _: object) -> bool:
+        ...
+
+    def __ne__(self, _: object) -> bool:
+        ...
+
+    def __lt__(self, _: Any) -> bool:
+        ...
+
+    def __le__(self, _: Any) -> bool:
+        ...
+
+    def __gt__(self, _: Any) -> bool:
+        ...
+
+    def __ge__(self, _: Any) -> bool:
+        ...
+
+
+T = TypeVar("T", bound=SupportsComparators)
 
 
 class _BaseNode(ABC, Generic[T]):
@@ -12,8 +32,56 @@ class _BaseNode(ABC, Generic[T]):
         data: T,
         parent: Optional[_BaseNode] = None,
     ) -> None:
-        self.data = data
+        self._data = data
         self._parent = parent
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data == other.data
+        except TypeError:
+            return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data != other.data
+        except TypeError:
+            return NotImplemented
+
+    def __lt__(self, other: _BaseNode) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data < other.data
+        except TypeError:
+            return NotImplemented
+
+    def __le__(self, other: _BaseNode) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data <= other.data
+        except TypeError:
+            return NotImplemented
+
+    def __gt__(self, other: _BaseNode) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data > other.data
+        except TypeError:
+            return NotImplemented
+
+    def __ge__(self, other: _BaseNode) -> bool:
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        try:
+            return self.data >= other.data
+        except TypeError:
+            return NotImplemented
 
     @property
     @abstractmethod
@@ -36,11 +104,8 @@ class _BaseNode(ABC, Generic[T]):
         raise NotImplementedError("Cannot call method of abstract class")
 
     @staticmethod
-    def check_type(
-        node: _BaseNode,
-        node_type: Type[_BaseNode]
-    ) -> None:
-        if not isinstance(node, GeneralNode):
+    def check_type(node: _BaseNode, node_type: Type[_BaseNode]) -> None:
+        if not isinstance(node, _BaseNode):
             raise TypeError(
                 f"Node is of type {type(node)} but should by of type {node_type}"
             )
