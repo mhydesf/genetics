@@ -41,8 +41,7 @@ class GeneralTree(_BaseTree):
         self,
         root: GeneralNode
     ) -> None:
-        if root:
-            root.check_type(root, GeneralNode)
+        root.check_type(root, GeneralNode)
         super().__init__(root)
 
     @property
@@ -69,8 +68,7 @@ class BinaryTree(_BaseTree):
         self,
         root: BinaryNode
     ) -> None:
-        if root:
-            root.check_type(root, BinaryNode)
+        root.check_type(root, BinaryNode)
         super().__init__(root)
 
     @property
