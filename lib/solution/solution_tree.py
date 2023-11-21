@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Callable, List, cast
 from typing import Callable, Dict, List, Optional, cast
 import operator
 import random
@@ -7,6 +6,14 @@ import random
 from structures.node import T, BinaryNode
 from structures.tree import BinaryTree
 from solution.solution_node import SolutionNode
+
+
+SYMBOLS = {
+    operator.add: '+',
+    operator.sub: '-',
+    operator.mul: '*',
+    operator.truediv: '/'
+}
 
 
 class SolutionTree(BinaryTree):
@@ -17,7 +24,6 @@ class SolutionTree(BinaryTree):
         self._root = root
         super().__init__(cast(BinaryNode, self._root))
 
-    # TODO: Implement this
     def __repr__(self) -> str:
         return self.print_equation(cast(SolutionNode, self.root), True)
 
@@ -47,3 +53,53 @@ class SolutionTree(BinaryTree):
         )
 
         return node
+
+    def print_tree(
+        self,
+        node: SolutionNode,
+        indent: str = "",
+        side: str = "root"
+    ) -> None:
+        if node is not None:
+            if side == "root":
+                print(node)
+            else:
+                branch = ("└── " if side == "right" else "┌── ")
+                print(f"{indent}{branch}{node}")
+
+            if side == "root":
+                next_indent = indent
+            elif side == "left":
+                next_indent = indent + "│   "
+            else:
+                next_indent = indent + "    "
+
+            if node.left_child:
+                self.print_tree(node.left_child, next_indent, side="left")
+            if node.right_child:
+                self.print_tree(node.right_child, next_indent, side="right")
+
+    def print_equation(
+        self,
+        node: SolutionNode,
+        is_root: bool = True
+    ) -> str:
+        if node is None:
+            return ""
+
+        if callable(node.data):
+            if node.left_child:
+                left_side = self.print_equation(node.left_child, False)
+            else:
+                left_side = ""
+            if node.right_child:
+                right_side = self.print_equation(node.right_child, False)
+            else:
+                right_side = ""
+            operator_symbol = SYMBOLS.get(node.data, '?')
+
+            if is_root:
+                return f"f = {left_side} {operator_symbol} {right_side}"
+            return f"({left_side} {operator_symbol} {right_side})"
+
+        return str(node.data)
