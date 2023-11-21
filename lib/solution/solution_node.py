@@ -1,6 +1,6 @@
 from __future__ import annotations
-from typing import Optional, cast
-from structures.node import T, NodeT, SupportsComparators, BinaryNode
+from typing import Dict, Optional, cast
+from structures.node import T, NodeT, BinaryNode
 
 
 class SolutionNode(BinaryNode[T, NodeT]):
@@ -45,17 +45,19 @@ class SolutionNode(BinaryNode[T, NodeT]):
         self.check_type(child, SolutionNode)
         self._right_child = child
 
-    def evaluate(self) -> SupportsComparators:
+    def evaluate(self, context: Dict[str, T]) -> T:
         if callable(self.data):
             left_result = (
-                cast(SolutionNode, self.left_child).evaluate()
+                cast(SolutionNode, self.left_child).evaluate(context)
                 if self.left_child
                 else None
             )
             right_result = (
-                cast(SolutionNode, self.right_child).evaluate()
+                cast(SolutionNode, self.right_child).evaluate(context)
                 if self.right_child
                 else None
             )
             return self.data(left_result, right_result)
+        if isinstance(self.data, str):
+            return context[self.data]
         return self.data
