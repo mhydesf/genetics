@@ -1,8 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import cast
 from collections import deque
+from enum import Enum, unique
 
 from structures.node import _BaseNode, BinaryNode, GeneralNode
+
+
+@unique
+class BtInsertionMethod(Enum):
+    BST_INSERT = 0
+    COMPLETE_INSERT = 1
+    LEFT_INSERT = 2
+    RIGHT_INSERT = 3
 
 
 class _BaseTree(ABC):
@@ -23,11 +32,11 @@ class _BaseTree(ABC):
         raise NotImplementedError("Cannot call method of abstract class")
 
     @abstractmethod
-    def insert(self, node: _BaseNode) -> None:
+    def insert(self, node: _BaseNode, insertion: Enum) -> None:
         raise NotImplementedError("Cannot call method of abstract class")
 
 
-class Tree(_BaseTree):
+class GeneralTree(_BaseTree):
     def __init__(
         self,
         root: GeneralNode
@@ -45,11 +54,14 @@ class Tree(_BaseTree):
         root.check_type(root, GeneralNode)
         self._root = root
 
-    def insert(self, node: _BaseNode) -> None:
+    # TODO: Compelete general tree insertion techniques
+    def insert(self, node: _BaseNode, _: Enum) -> None:
         node.check_type(node, GeneralNode)
         if not self.root:
             self.root = node
             return
+        
+        raise NotImplementedError("GeneralTree insertion not implemented")
 
 
 class BinaryTree(_BaseTree):
@@ -70,11 +82,26 @@ class BinaryTree(_BaseTree):
         root.check_type(root, BinaryNode)
         self._root = root
 
-    def insert(self, node: _BaseNode) -> None:
+    def insert(
+        self,
+        node: _BaseNode,
+        insertion: Enum
+    ) -> None:
         node.check_type(node, BinaryNode)
+        node = cast(BinaryNode, node)
         if not self.root:
             self.root = node
             return
+        
+        match insertion:
+            case BtInsertionMethod.BST_INSERT:
+                self._bst_insert(node, cast(BinaryNode, self.root))
+            case BtInsertionMethod.COMPLETE_INSERT:
+                self._complete_bt_insert(node)
+            case BtInsertionMethod.LEFT_INSERT:
+                self._left_insert(node)
+            case BtInsertionMethod.RIGHT_INSERT:
+                self._right_insert(node)
 
     def _bst_insert(
         self,
