@@ -15,6 +15,9 @@ class SolutionNode(BinaryNode[T, NodeT]):
         self._left_child: Optional[NodeT] = None
         self._right_child: Optional[NodeT] = None
 
+    def __repr__(self):
+        return f"{self.data.__name__ if callable(self.data) else self.data}"
+
     @property
     def parent(self) -> Optional[NodeT]:
         return self._parent
