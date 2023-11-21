@@ -39,6 +39,7 @@ class SolutionNode:
             raise TypeError(
                 f"Node is of type {type(node)} but should by of type {SolutionNode}"
             )
+
     @property
     def parent(self) -> Optional[SolutionNode]:
         return self._parent
@@ -74,26 +75,22 @@ class SolutionNode:
         self.check_type(child)
         self._right_child = child
 
-    def evaluate(self, context: Dict[str, T]) -> Callable[..., Any] | SupportsInt | SupportsFloat:
+    def evaluate(
+        self, context: Dict[str, T]
+    ) -> Callable[..., Any] | SupportsInt | SupportsFloat:
         if callable(self.data):
             sig = inspect.signature(self.data)
             num_args = len(sig.parameters)
-            left_result = (
-                self.left_child.evaluate(context)
-                if self.left_child
-                else None
-            )
-            right_result = (
-                self.right_child.evaluate(context)
-                if self.right_child
-                else None
-            )
-            if num_args == 1:
-                return self.data(left_result)
-            try:
-                return self.data(left_result, right_result)
-            except ZeroDivisionError:
-                return cast(T, inf)
+            left_result = self.left_child.evaluate(context) if self.left_child else None
+            if num_args > 1:
+                right_result = (
+                    self.right_child.evaluate(context) if self.right_child else None
+                )
+                try:
+                    return self.data(left_result, right_result)
+                except ZeroDivisionError:
+                    return cast(T, inf)
+            return self.data(left_result)
         if isinstance(self.data, str):
             return context[self.data]
         return self.data

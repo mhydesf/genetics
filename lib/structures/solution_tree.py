@@ -9,19 +9,16 @@ from structures.solution_node import T, SolutionNode
 
 
 SYMBOLS = {
-    operator.add: '+',
-    operator.sub: '-',
-    operator.mul: '*',
-    operator.truediv: '/',
-    cos: 'cos'
+    operator.add: "+",
+    operator.sub: "-",
+    operator.mul: "*",
+    operator.truediv: "/",
+    cos: "cos",
 }
 
 
 class SolutionTree:
-    def __init__(
-        self,
-        root: SolutionNode
-    ) -> None:
+    def __init__(self, root: SolutionNode) -> None:
         self._root = root
 
     def __repr__(self) -> str:
@@ -36,7 +33,9 @@ class SolutionTree:
         node.check_type(node)
         self._root = node
 
-    def evaluate(self, context: Dict[str, T]) -> Callable[..., Any] | SupportsInt | SupportsFloat:
+    def evaluate(
+        self, context: Dict[str, T]
+    ) -> Callable[..., Any] | SupportsInt | SupportsFloat:
         return self.root.evaluate(context)
 
     @staticmethod
@@ -67,16 +66,13 @@ class SolutionTree:
         return node
 
     def print_tree(
-        self,
-        node: SolutionNode,
-        indent: str = "",
-        side: str = "root"
+        self, node: SolutionNode, indent: str = "", side: str = "root"
     ) -> None:
         if node is not None:
             if side == "root":
                 print(node)
             else:
-                branch = ("└── " if side == "right" else "┌── ")
+                branch = "└── " if side == "right" else "┌── "
                 print(f"{indent}{branch}{node}")
 
             if side == "root":
@@ -91,11 +87,7 @@ class SolutionTree:
             if node.right_child:
                 self.print_tree(node.right_child, next_indent, side="right")
 
-    def print_equation(
-        self,
-        node: SolutionNode,
-        is_root: bool = True
-    ) -> str:
+    def print_equation(self, node: SolutionNode, is_root: bool = True) -> str:
         if node is None:
             return ""
 
@@ -108,7 +100,7 @@ class SolutionTree:
                 right_side = self.print_equation(node.right_child, False)
             else:
                 right_side = ""
-            operator_symbol = SYMBOLS.get(node.data, '?')
+            operator_symbol = SYMBOLS.get(node.data, "?")
 
             sig = inspect.signature(node.data)
             num_args = len(sig.parameters)
