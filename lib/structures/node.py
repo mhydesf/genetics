@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 from typing import Any, Generic, List, Optional, Protocol, Type, TypeVar
 
 
+T = TypeVar("T", bound='SupportsComparators')
+NodeT = TypeVar("NodeT", bound='_BaseNode')
+
+
 class SupportsComparators(Protocol):
     def __eq__(self, _: object) -> bool:
         ...
@@ -23,14 +27,11 @@ class SupportsComparators(Protocol):
         ...
 
 
-T = TypeVar("T", bound=SupportsComparators)
-
-
-class _BaseNode(ABC, Generic[T]):
+class _BaseNode(ABC, Generic[T, NodeT]):
     def __init__(
         self,
         data: T,
-        parent: Optional[_BaseNode] = None,
+        parent: Optional[NodeT] = None,
     ) -> None:
         self._data = data
         self._parent = parent
@@ -111,11 +112,11 @@ class _BaseNode(ABC, Generic[T]):
             )
 
 
-class GeneralNode(_BaseNode[T]):
+class GeneralNode(_BaseNode[T, NodeT]):
     def __init__(
         self,
         data: T,
-        parent: Optional[_BaseNode] = None,
+        parent: Optional[NodeT] = None,
     ) -> None:
         if parent:
             self.check_type(parent, GeneralNode)
@@ -127,7 +128,7 @@ class GeneralNode(_BaseNode[T]):
         return self._parent
 
     @parent.setter
-    def parent(self, parent: _BaseNode) -> None:
+    def parent(self, parent: NodeT) -> None:
         self.check_type(parent, GeneralNode)
         self._parent = parent
 
@@ -148,24 +149,24 @@ class GeneralNode(_BaseNode[T]):
         self._children.append(child)
 
 
-class BinaryNode(_BaseNode[T]):
+class BinaryNode(_BaseNode[T, NodeT]):
     def __init__(
         self,
         data: T,
-        parent: Optional[_BaseNode] = None,
+        parent: Optional[NodeT] = None,
     ) -> None:
         if parent:
             self.check_type(parent, BinaryNode)
         super().__init__(data, parent)
-        self._left_child: Optional[BinaryNode] = None
-        self._right_child: Optional[BinaryNode] = None
+        self._left_child: Optional[NodeT] = None
+        self._right_child: Optional[NodeT] = None
 
     @property
-    def parent(self) -> Optional[_BaseNode]:
+    def parent(self) -> Optional[NodeT]:
         return self._parent
 
     @parent.setter
-    def parent(self, parent: _BaseNode) -> None:
+    def parent(self, parent: NodeT) -> None:
         self.check_type(parent, BinaryNode)
         self._parent = parent
 
@@ -178,19 +179,19 @@ class BinaryNode(_BaseNode[T]):
         self._data = data
 
     @property
-    def left_child(self) -> Optional[BinaryNode]:
+    def left_child(self) -> Optional[NodeT]:
         return self._left_child
 
     @left_child.setter
-    def left_child(self, child: BinaryNode) -> None:
+    def left_child(self, child: NodeT) -> None:
         self.check_type(child, BinaryNode)
         self._left_child = child
 
     @property
-    def right_child(self) -> Optional[BinaryNode]:
+    def right_child(self) -> Optional[NodeT]:
         return self._right_child
 
     @right_child.setter
-    def right_child(self, child: BinaryNode) -> None:
+    def right_child(self, child: NodeT) -> None:
         self.check_type(child, BinaryNode)
         self._right_child = child
