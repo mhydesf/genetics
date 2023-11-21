@@ -1,5 +1,7 @@
 from __future__ import annotations
+import inspect
 from typing import Callable, Dict, List, Optional, cast
+from math import cos
 import operator
 import random
 
@@ -12,7 +14,8 @@ SYMBOLS = {
     operator.add: '+',
     operator.sub: '-',
     operator.mul: '*',
-    operator.truediv: '/'
+    operator.truediv: '/',
+    cos: 'cos'
 }
 
 
@@ -44,13 +47,16 @@ class SolutionTree(BinaryTree):
 
         operator_func = random.choice(operators)
         node = SolutionNode(cast(T, operator_func), parent)
+        sig = inspect.signature(operator_func)
+        num_args = len(sig.parameters)
 
         node.left_child = SolutionTree.generate_random_tree(
             operators, operands, max_depth, current_depth + 1, node
         )
-        node.right_child = SolutionTree.generate_random_tree(
-            operators, operands, max_depth, current_depth + 1, node
-        )
+        if num_args > 1:
+            node.right_child = SolutionTree.generate_random_tree(
+                operators, operands, max_depth, current_depth + 1, node
+            )
 
         return node
 

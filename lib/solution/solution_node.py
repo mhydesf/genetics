@@ -1,5 +1,8 @@
 from __future__ import annotations
 from typing import Dict, Optional, cast
+from math import inf
+import inspect
+
 from structures.node import T, NodeT, BinaryNode
 
 
@@ -47,6 +50,8 @@ class SolutionNode(BinaryNode[T, NodeT]):
 
     def evaluate(self, context: Dict[str, T]) -> T:
         if callable(self.data):
+            sig = inspect.signature(self.data)
+            num_args = len(sig.parameters)
             left_result = (
                 cast(SolutionNode, self.left_child).evaluate(context)
                 if self.left_child
@@ -57,7 +62,12 @@ class SolutionNode(BinaryNode[T, NodeT]):
                 if self.right_child
                 else None
             )
-            return self.data(left_result, right_result)
+            if num_args == 1:
+                return self.data(left_result)
+            try:
+                return self.data(left_result, right_result)
+            except ZeroDivisionError:
+                return inf
         if isinstance(self.data, str):
             return context[self.data]
         return self.data
