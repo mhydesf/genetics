@@ -60,7 +60,7 @@ class GeneralTree(_BaseTree):
         if not self.root:
             self.root = node
             return
-        
+
         raise NotImplementedError("GeneralTree insertion not implemented")
 
 
@@ -92,7 +92,7 @@ class BinaryTree(_BaseTree):
         if not self.root:
             self.root = node
             return
-        
+
         match insertion:
             case BtInsertionMethod.BST_INSERT:
                 self._bst_insert(node, cast(BinaryNode, self.root))
