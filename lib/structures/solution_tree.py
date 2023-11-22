@@ -19,6 +19,8 @@ SYMBOLS = {
 
 class SolutionTree:
     def __init__(self, root: SolutionNode) -> None:
+        if not isinstance(root, SolutionNode):
+            raise TypeError(f"Invalid type {type(root)} expected {SolutionNode}")
         self._root = root
 
     def __repr__(self) -> str:
@@ -30,7 +32,8 @@ class SolutionTree:
 
     @root.setter
     def root(self, node: SolutionNode) -> None:
-        node.check_type(node)
+        if not isinstance(node, SolutionNode):
+            raise TypeError
         self._root = node
 
     def evaluate(

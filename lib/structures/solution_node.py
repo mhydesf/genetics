@@ -23,8 +23,8 @@ class SolutionNode:
         data: T,
         parent: Optional[SolutionNode] = None,
     ) -> None:
-        if parent:
-            self.check_type(parent)
+        if parent and not isinstance(parent, SolutionNode):
+            raise TypeError(f"Invalid type {type(parent)} expected {SolutionNode}")
         self._parent = parent
         self._data = data
         self._left_child: Optional[SolutionNode] = None
@@ -33,20 +33,14 @@ class SolutionNode:
     def __repr__(self):
         return f"{self.data.__name__ if callable(self.data) else self.data}"
 
-    @staticmethod
-    def check_type(node: SolutionNode) -> None:
-        if not isinstance(node, SolutionNode):
-            raise TypeError(
-                f"Node is of type {type(node)} but should by of type {SolutionNode}"
-            )
-
     @property
     def parent(self) -> Optional[SolutionNode]:
         return self._parent
 
     @parent.setter
     def parent(self, parent: SolutionNode) -> None:
-        self.check_type(parent)
+        if not isinstance(parent, SolutionNode):
+            raise TypeError(f"Invalid type {type(parent)} expected {SolutionNode}")
         self._parent = parent
 
     @property
@@ -63,7 +57,8 @@ class SolutionNode:
 
     @left_child.setter
     def left_child(self, child: SolutionNode) -> None:
-        self.check_type(child)
+        if not isinstance(child, SolutionNode):
+            raise TypeError(f"Invalid type {type(child)} expected {SolutionNode}")
         self._left_child = child
 
     @property
@@ -72,7 +67,8 @@ class SolutionNode:
 
     @right_child.setter
     def right_child(self, child: SolutionNode) -> None:
-        self.check_type(child)
+        if not isinstance(child, SolutionNode):
+            raise TypeError(f"Invalid type {type(child)} expected {SolutionNode}")
         self._right_child = child
 
     def evaluate(
