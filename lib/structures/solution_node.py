@@ -38,8 +38,8 @@ class SolutionNode:
         return self._parent
 
     @parent.setter
-    def parent(self, parent: SolutionNode) -> None:
-        if not isinstance(parent, SolutionNode):
+    def parent(self, parent: Optional[SolutionNode]) -> None:
+        if not isinstance(parent, Optional[SolutionNode]):
             raise TypeError(f"Invalid type {type(parent)} expected {SolutionNode}")
         self._parent = parent
 

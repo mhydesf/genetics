@@ -29,10 +29,12 @@ class Population:
         max_depth: int,
     ) -> Population:
         solutions = [
-            SolutionTree.generate_random_tree(
-                operators=operators,
-                operands=operands,
-                max_depth=max_depth,
+            SolutionTree(
+                SolutionTree.generate_random_tree(
+                    operators=operators,
+                    operands=operands,
+                    max_depth=max_depth,
+                )
             )
             for _ in range(size)
         ]
