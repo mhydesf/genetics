@@ -99,6 +99,13 @@ class SolutionTree:
             if node.right_child:
                 self.print_tree(node.right_child, right_indent, side="right")
 
+    def print_equation(self, node: SolutionNode) -> str:
+        if node is None:
+            return ""
+
+        equation = self._generate_equation(node)
+        return f"f = {equation}"
+
     def _print_node(self, node: SolutionNode, indent: str, side: str) -> None:
         branch = "└── " if side == "right" else "┌── "
         if side == "root":
@@ -112,13 +119,6 @@ class SolutionTree:
         if side == "left":
             return indent + "│   "
         return indent + "    "
-
-    def print_equation(self, node: SolutionNode) -> str:
-        if node is None:
-            return ""
-
-        equation = self._generate_equation(node)
-        return f"f = {equation}"
 
     def _generate_equation(self, node: SolutionNode) -> str:
         if callable(node.data):
