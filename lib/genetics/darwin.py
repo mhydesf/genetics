@@ -16,7 +16,6 @@ class Darwin:
     ) -> Tuple[SolutionTree, SolutionTree]:
         point1 = Darwin._select_prune_node(tree1.root)
         point2 = Darwin._select_prune_node(tree2.root)
-
         Darwin._swap_subtrees(point1, point2)
 
         return tree1, tree2
