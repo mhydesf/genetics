@@ -24,6 +24,7 @@ class Population:
     @solutions.setter
     def solutions(self, solutions: List[SolutionTree]) -> None:
         self._solutions = solutions
+        self._size = len(solutions)
 
     @staticmethod
     def generate_population(
