@@ -78,29 +78,3 @@ class Darwin:
             node1.parent, node2.parent = node2.parent, node1.parent
         else:
             raise ValueError("Both nodes must have parents for the swap to work")
-
-
-if __name__ == "__main__":
-    import operator
-
-    operators = [
-        operator.add,
-        operator.sub,
-        operator.mul,
-        operator.truediv,
-    ]
-    operands = [1, 2, 'x', 'y']
-    max_depth = 3
-    context = {'x': 5, 'y': 10}
-
-    root1 = SolutionTree.generate_random_tree(operators, operands, max_depth)
-    tree1 = SolutionTree(root1)
-
-    print(tree1)
-    tree1 = Darwin.mutation(
-        tree1,
-        operators,
-        operands,
-        max_depth - 1
-    )
-    print(tree1)
