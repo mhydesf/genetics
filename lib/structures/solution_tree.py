@@ -2,8 +2,17 @@ from __future__ import annotations
 import random
 import inspect
 import operator
-from math import cos
-from typing import Any, Callable, Dict, List, Optional, SupportsFloat, SupportsInt, cast
+import math
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    SupportsFloat,
+    SupportsInt,
+    cast,
+)
 
 from structures.solution_node import T, SolutionNode
 
@@ -13,7 +22,15 @@ SYMBOLS = {
     operator.sub: "-",
     operator.mul: "*",
     operator.truediv: "/",
-    cos: "cos",
+    math.exp: "exp",
+    math.pow: "pow",
+    math.log: "ln",
+    math.sin: "sin",
+    math.cos: "cos",
+    math.tan: "tan",
+    math.sinh: "sinh",
+    math.cosh: "cosh",
+    math.tanh: "tanh",
 }
 
 
@@ -24,7 +41,7 @@ class SolutionTree:
         self._root = root
 
     def __repr__(self) -> str:
-        return self.print_equation(cast(SolutionNode, self.root), True)
+        return self.print_equation(self.root)
 
     @property
     def root(self) -> SolutionNode:
@@ -72,47 +89,50 @@ class SolutionTree:
         self, node: SolutionNode, indent: str = "", side: str = "root"
     ) -> None:
         if node is not None:
-            if side == "root":
-                print(node)
-            else:
-                branch = "└── " if side == "right" else "┌── "
-                print(f"{indent}{branch}{node}")
+            self._print_node(node, indent, side)
 
-            if side == "root":
-                next_indent = indent
-            elif side == "left":
-                next_indent = indent + "│   "
-            else:
-                next_indent = indent + "    "
+            left_indent = self._update_indent(indent, side)
+            right_indent = self._update_indent(indent, side)
 
             if node.left_child:
-                self.print_tree(node.left_child, next_indent, side="left")
+                self.print_tree(node.left_child, left_indent, side="left")
             if node.right_child:
-                self.print_tree(node.right_child, next_indent, side="right")
+                self.print_tree(node.right_child, right_indent, side="right")
 
-    def print_equation(self, node: SolutionNode, is_root: bool = True) -> str:
+    def _print_node(self, node: SolutionNode, indent: str, side: str) -> None:
+        branch = "└── " if side == "right" else "┌── "
+        if side == "root":
+            print(node)
+            return
+        print(f"{indent}{branch}{node}")
+
+    def _update_indent(self, indent: str, side: str) -> str:
+        if side == "root":
+            return indent
+        if side == "left":
+            return indent + "│   "
+        return indent + "    "
+
+    def print_equation(self, node: SolutionNode) -> str:
         if node is None:
             return ""
 
+        equation = self._generate_equation(node)
+        return f"f = {equation}"
+
+    def _generate_equation(self, node: SolutionNode) -> str:
         if callable(node.data):
-            if node.left_child:
-                left_side = self.print_equation(node.left_child, False)
-            else:
-                left_side = ""
-            if node.right_child:
-                right_side = self.print_equation(node.right_child, False)
-            else:
-                right_side = ""
+            left_side = (
+                self._generate_equation(node.left_child) if node.left_child else ""
+            )
+            right_side = (
+                self._generate_equation(node.right_child) if node.right_child else ""
+            )
             operator_symbol = SYMBOLS.get(node.data, "?")
-
-            sig = inspect.signature(node.data)
-            num_args = len(sig.parameters)
-            if is_root:
-                if num_args > 1:
-                    return f"f = {left_side} {operator_symbol} {right_side}"
-                return f"f = {operator_symbol}({left_side})"
-            if num_args > 1:
-                return f"({left_side} {operator_symbol} {right_side})"
-            return f"({operator_symbol}({left_side})"
-
+            equation = (
+                f"{left_side} {operator_symbol} {right_side}"
+                if right_side
+                else f"{operator_symbol}({left_side})"
+            )
+            return f"({equation})" if node.left_child else equation
         return str(node.data)

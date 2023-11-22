@@ -75,18 +75,38 @@ class SolutionNode:
         self, context: Dict[str, T]
     ) -> Callable[..., Any] | SupportsInt | SupportsFloat:
         if callable(self.data):
-            sig = inspect.signature(self.data)
-            num_args = len(sig.parameters)
-            left_result = self.left_child.evaluate(context) if self.left_child else None
-            if num_args > 1:
-                right_result = (
-                    self.right_child.evaluate(context) if self.right_child else None
-                )
-                try:
-                    return self.data(left_result, right_result)
-                except ZeroDivisionError:
-                    return cast(T, inf)
-            return self.data(left_result)
+            return self._evaluate_callable(context)
         if isinstance(self.data, str):
             return context[self.data]
         return self.data
+
+    def _evaluate_callable(self, context: Dict[str, T]) -> Any:
+        left_result = self._evaluate_child(self.left_child, context)
+        right_result = (
+            self._evaluate_child(self.right_child, context)
+            if self._has_multiple_args()
+            else None
+        )
+
+        try:
+            return self._invoke_data_callable(left_result, right_result)
+        except (ZeroDivisionError, OverflowError, ValueError):
+            return cast(T, inf)
+
+    def _evaluate_child(self, child, context: Dict[str, T]) -> Any:
+        return child.evaluate(context) if child else None
+
+    def _has_multiple_args(self) -> bool:
+        sig = inspect.signature(self.data)
+        return len(sig.parameters) > 1
+
+    def _invoke_data_callable(
+        self,
+        left_result: T,
+        right_result: T
+    ) -> Any:
+        return (
+            self.data(left_result, right_result)
+            if right_result is not None
+            else self.data(left_result)
+        )
