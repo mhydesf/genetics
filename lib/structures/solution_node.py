@@ -110,8 +110,11 @@ class SolutionNode:
         left_result: T,
         right_result: T
     ) -> Any:
-        return (
-            cast(Callable[..., Any], self.data)(left_result, right_result)
-            if right_result is not None
-            else cast(Callable[..., Any], self.data)(left_result)
-        )
+        try:
+            return (
+                cast(Callable[..., Any], self.data)(left_result, right_result)
+                if right_result is not None
+                else cast(Callable[..., Any], self.data)(left_result)
+            )
+        except ZeroDivisionError:
+            return cast(T, inf)
