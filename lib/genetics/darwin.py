@@ -45,7 +45,7 @@ class Darwin:
 
     @staticmethod
     def tournament_selection(population: Population) -> Population:
-        pass
+        return population
 
     @staticmethod
     def _select_prune_node(node: SolutionNode) -> SolutionNode:

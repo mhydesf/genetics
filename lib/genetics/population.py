@@ -38,7 +38,7 @@ class Population:
         self._fitness = fitness
 
     def evaluate_fitness(self) -> Dict[SolutionTree, SupportsInt | SupportsFloat]:
-        if not self.fitness:
+        if self.fitness is None:
             raise ValueError("Fitness function has not been set")
         return {solution: self.fitness(solution) for solution in self.solutions}
 
@@ -68,7 +68,8 @@ if __name__ == "__main__":
     import numpy as np
     from statistics import mean
 
-    operators = [
+    SIZE = 10
+    OPERATORS = [
         operator.add,
         operator.sub,
         operator.mul,
@@ -76,14 +77,14 @@ if __name__ == "__main__":
         math.exp,
         math.pow,
     ]
-    operands = [1, 2, 3, 4, 5, 'x']
-    max_depth = 3
+    OPERANDS = [1, 2, 3, 4, 5, 'x']
+    MAX_DEPTH = 3
 
     population = Population.generate_population(
-        size=10,
-        operators=operators,
-        operands=operands,
-        max_depth=max_depth
+        size=SIZE,
+        operators=OPERATORS,
+        operands=OPERANDS,
+        max_depth=MAX_DEPTH
     )
 
     def minimize_difference(solution: SolutionTree) -> float:
