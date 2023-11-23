@@ -1,14 +1,12 @@
 import random
 from typing import Tuple, List, Callable, Any
+from genetics.population import Population
 
 from structures.solution_node import SolutionNode, T
 from structures.solution_tree import SolutionTree
 
 
 class Darwin:
-    def __init__(self) -> None:
-        pass
-
     @staticmethod
     def crossover(
         tree1: SolutionTree,
@@ -44,6 +42,10 @@ class Darwin:
             tree.root = root
         root.parent = parent
         return SolutionTree(tree.root)
+
+    @staticmethod
+    def tournament_selection(population: Population) -> Population:
+        pass
 
     @staticmethod
     def _select_prune_node(node: SolutionNode) -> SolutionNode:
