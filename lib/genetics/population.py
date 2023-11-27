@@ -27,16 +27,19 @@ class Population:
         self._solutions = solutions
         self._size = len(solutions)
 
+    # TODO: This probably doesn't belong here
     @property
     def fitness(self) -> Callable[..., Any]:
         return self._fitness
 
+    # TODO: This probably doesn't belong here
     @fitness.setter
     def fitness(self, fitness: Callable[..., Any]) -> None:
         if not callable(fitness):
             raise TypeError("Fitness funciton must be callable")
         self._fitness = fitness
 
+    # TODO: This probably doesn't belong here
     def evaluate_fitness(self) -> Dict[SolutionTree, SupportsInt | SupportsFloat]:
         if self.fitness is None:
             raise ValueError("Fitness function has not been set")

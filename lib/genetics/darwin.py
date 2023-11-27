@@ -19,6 +19,8 @@ class Darwin:
 
         return tree1, tree2
 
+    # TODO: This method results in ever growing tree depth.
+    # That's a no-go
     @staticmethod
     def mutation(
         tree: SolutionTree,
@@ -44,6 +46,8 @@ class Darwin:
         root.parent = parent
         return SolutionTree(tree.root)
 
+    # TODO: This should preserve the original population
+    # size
     @staticmethod
     def tournament_selection(population: Dict[SolutionTree, float]) -> Population:
         items = list(population.items())
@@ -70,6 +74,8 @@ class Darwin:
         random.shuffle(next_gen)
         return next_gen[:size]
 
+    # TODO: This is a hack solution - need to find a better way
+    # to handle duplication
     @staticmethod
     def mutate_duplicates(
         solutions: List[SolutionTree],
@@ -121,6 +127,7 @@ class Darwin:
         else:
             raise ValueError("Both nodes must have parents for the swap to work")
 
+    # TODO: See Darwin.mutate_duplicates
     @staticmethod
     def _find_duplicates(solutions: List[SolutionTree]) -> List[SolutionTree]:
         counts = Counter(solutions)

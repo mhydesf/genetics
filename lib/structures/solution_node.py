@@ -105,6 +105,7 @@ class SolutionNode:
         sig = inspect.signature(cast(Callable[..., Any], self.data))
         return len(sig.parameters) > 1
 
+    # TODO: Handle the runtime warning
     def _invoke_data_callable(
         self,
         left_result: T,
