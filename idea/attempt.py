@@ -7,23 +7,29 @@ from genetics.population import Population
 from structures.solution_tree import SolutionTree, math
 
 
+def linear(x: int, a: int = 1):
+    return a*x
+
+
+def quadratic(x: int, a: int = 1):
+    return a*x**2
+
+
 def minimize_difference(solution: SolutionTree) -> float:
     diff = []
     for i in np.linspace(1,10,10):
-        diff.append(abs(i - solution.evaluate(context={'x': i})))
+        diff.append(abs(quadratic(i) - solution.evaluate(context={'x': i})))
     return mean(diff)
 
 
 def main():
-    SIZE = 10
+    SIZE = 100
     OPERATORS = [
         operator.add,
         operator.sub,
         operator.mul,
         operator.truediv,
-        math.sin,
-        math.cos,
-        math.tan
+        math.pow,
     ]
     consts = [x for x in range(100)]
     vars = ['x']
@@ -50,8 +56,9 @@ def main():
         )
         population.solutions = next_gen
         if min(fit.values()) <= 0.05:
-            print(f"Result is: {min(fit, key=fit.get)} after {i} iterations")
+            print(f"Result is {min(fit, key=fit.get)} with a fitness score of {min(fit.values())} after {i} iterations")
             break
+        print(min(fit.values()))
 
 
 if __name__ == "__main__":
