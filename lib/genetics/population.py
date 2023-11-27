@@ -60,38 +60,3 @@ class Population:
             for _ in range(size)
         ]
         return Population(size, solutions)
-
-
-if __name__ == "__main__":
-    import math
-    import operator
-    import numpy as np
-    from statistics import mean
-
-    SIZE = 10
-    OPERATORS = [
-        operator.add,
-        operator.sub,
-        operator.mul,
-        operator.truediv,
-        math.exp,
-        math.pow,
-    ]
-    OPERANDS = [1, 2, 3, 4, 5, 'x']
-    MAX_DEPTH = 3
-
-    population = Population.generate_population(
-        size=SIZE,
-        operators=OPERATORS,
-        operands=OPERANDS,
-        max_depth=MAX_DEPTH
-    )
-
-    def minimize_difference(solution: SolutionTree) -> float:
-        diff = []
-        for i in np.linspace(1,10,10):
-            diff.append(i - solution.evaluate(context={'x': i}))
-        return mean(diff)
-
-    population.fitness = minimize_difference
-    fit = population.evaluate_fitness()

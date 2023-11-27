@@ -1,5 +1,6 @@
+from collections import Counter
 import random
-from typing import Tuple, List, Callable, Any
+from typing import Dict, Tuple, List, Callable, Any
 from genetics.population import Population
 
 from structures.solution_node import SolutionNode, T
@@ -44,8 +45,48 @@ class Darwin:
         return SolutionTree(tree.root)
 
     @staticmethod
-    def tournament_selection(population: Population) -> Population:
-        return population
+    def tournament_selection(population: Dict[SolutionTree, float]) -> Population:
+        items = list(population.items())
+        random.shuffle(items)
+
+        selected = []
+        for i in range(0, len(items), 2):
+            if i + 1 < len(items):
+                item1 = items[i]
+                item2 = items[i + 1]
+                selected.append(max(item1, item2, key=lambda x: x[1])[0])
+
+        return selected
+
+    @staticmethod
+    def next_generation(fittest: List[SolutionTree], size: int):
+        random.shuffle(fittest)
+        children = []
+        for mother, father in zip(fittest[::2], fittest[1::2]):
+            daughter, son = Darwin.crossover(mother, father)
+            children.append(daughter)
+            children.append(son)
+        next_gen = children + fittest
+        random.shuffle(next_gen)
+        return next_gen[:size]
+
+    @staticmethod
+    def mutate_duplicates(
+        solutions: List[SolutionTree],
+        operators: List[Callable[..., Any]],
+        operands: List[T],
+        max_depth: int,
+    ) -> List[SolutionTree]:
+        duplicates = Darwin._find_duplicates(solutions)
+        for idx, solution in enumerate(solutions):
+            if solution in duplicates:
+                root = SolutionTree.generate_random_tree(
+                    operators,
+                    operands,
+                    max_depth
+                )
+                solutions[idx] = SolutionTree(root)
+        return solutions
 
     @staticmethod
     def _select_prune_node(node: SolutionNode) -> SolutionNode:
@@ -79,3 +120,8 @@ class Darwin:
             node1.parent, node2.parent = node2.parent, node1.parent
         else:
             raise ValueError("Both nodes must have parents for the swap to work")
+
+    @staticmethod
+    def _find_duplicates(solutions: List[SolutionTree]) -> List[SolutionTree]:
+        counts = Counter(solutions)
+        return [solution for solution, count in counts.items() if count > 1]
